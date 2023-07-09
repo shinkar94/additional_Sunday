@@ -23,7 +23,7 @@ export const RightContent = (props: PropsType) => {
     })
     return (
         <div>
-            {mapPhone}
+            {/*{mapPhone}*/}
         </div>
     );
 };
