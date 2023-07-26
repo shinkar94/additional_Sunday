@@ -67,7 +67,7 @@ function App() {
     const filteredState = marketState.filter(el => el.category === filterCategory)
   return (
     <StAppWrapper>
-        <Header basket={basket}/>
+        <Header basket={basket} marketState={marketState}/>
         <div className={'content'}>
             <div className={'sideBar'}>
                 {category.map((el, index) => <p key={index} onClick={()=>{toggleCategory(el)}}>{el}</p>)}

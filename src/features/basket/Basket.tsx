@@ -1,29 +1,61 @@
-import {FC} from 'react';
+import {FC, useEffect, useState} from 'react';
 import {InitialStateType} from "../../app/App";
+import styled from "styled-components";
 
 type PropsType = {
     basket: InitialStateType[]
     setBasket: (basket: InitialStateType[])=>void
 }
+type BasketGroupType = InitialStateType & {
+    count: number
+}
 export const Basket:FC<PropsType> = (props) => {
     const {basket, setBasket} = props
+    const [resultBasket, setResultBasket] = useState<BasketGroupType[]>([])
+    useEffect(()=>{
+        const newResultBasket = basket.map((el) => ({...el, count: 1}))
+        setResultBasket(newResultBasket)
+    },[basket])
 
+    const addCountProduct = (prodID: number) =>{
+        const newResultBasaket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count + 1} : el)
+        setResultBasket(newResultBasaket)
+    }
+    const removeCountProduct = (prodID: number) =>{
+        const newResultBasaket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count - 1} : el)
+        setResultBasket(newResultBasaket)
+    }
+    const removeBasket = (prodID: number) =>{
+        const newBasket = basket.filter((el)=> el.id !== prodID)
+        setBasket(newBasket)
+        localStorage.setItem('basket', JSON.stringify(newBasket))
+    }
     return (
-        <div>
+        <StBasket>
             <h1>Basket</h1>
-            {basket.map(el => {
-                const removeBasket = () =>{
-                    const newBasket = basket.filter((prod)=> prod.id !== el.id)
-                    setBasket(newBasket)
-                    localStorage.setItem('basket', JSON.stringify(newBasket))
-                }
+            {resultBasket.map(prod => {
                 return(
-                    <div key={el.id}>
-                        <span>{el.title}</span>
-                        <button onClick={removeBasket}>X</button>
+                    <div key={prod.id}>
+                        <span>{prod.title}</span>
+                        <div>
+                            <button onClick={()=>{removeCountProduct(prod.id)}} disabled={prod.count === 1}>-</button>
+                            {prod.count}
+                            <button onClick={()=>{addCountProduct(prod.id)}}>+</button>
+                        </div>
+                        <button onClick={()=>{removeBasket(prod.id)}}>X</button>
                     </div>
                 )
             })}
-        </div>
+            <p>sumPrice: {resultBasket.reduce((acc, el)=> acc + (el.price * el.count), 0)}</p>
+        </StBasket>
     );
 };
+
+const StBasket = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: gray;
+
+`
