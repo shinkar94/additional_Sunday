@@ -1,37 +1,38 @@
 import {FC, useEffect, useState} from 'react';
-import {InitialStateType} from "../../app/App";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
+import {InitialStateType} from "../../common/InitialState";
 
 type PropsType = {
     basket: InitialStateType[]
     setBasket: (basket: InitialStateType[])=>void
-}
-type BasketGroupType = InitialStateType & {
-    count: number
+    statusBasket: boolean
+    setStatusBasket: (statusBasket: boolean)=>void
 }
 export const Basket:FC<PropsType> = (props) => {
-    const {basket, setBasket} = props
-    const [resultBasket, setResultBasket] = useState<BasketGroupType[]>([])
+    const {basket, setBasket, statusBasket, setStatusBasket} = props
+    const [resultBasket, setResultBasket] = useState<InitialStateType[]>([])
     useEffect(()=>{
-        const newResultBasket = basket.map((el) => ({...el, count: 1}))
-        setResultBasket(newResultBasket)
-    },[basket])
-
+        setResultBasket(basket)
+    }, [basket])
     const addCountProduct = (prodID: number) =>{
-        const newResultBasaket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count + 1} : el)
-        setResultBasket(newResultBasaket)
+        const newResultBasket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count + 1} : el)
+        setResultBasket(newResultBasket)
     }
     const removeCountProduct = (prodID: number) =>{
-        const newResultBasaket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count - 1} : el)
-        setResultBasket(newResultBasaket)
+        const newResultBasket = resultBasket.map(el => el.id === prodID ? {...el, count: el.count - 1} : el)
+        setResultBasket(newResultBasket)
     }
     const removeBasket = (prodID: number) =>{
         const newBasket = basket.filter((el)=> el.id !== prodID)
         setBasket(newBasket)
         localStorage.setItem('basket', JSON.stringify(newBasket))
     }
+    const closeBasketHandler = () =>{
+       setStatusBasket(false)
+    }
     return (
-        <StBasket>
+        <StBasket $statusBasket={statusBasket}>
+            <button onClick={closeBasketHandler}>close</button>
             <h1>Basket</h1>
             {resultBasket.map(prod => {
                 return(
@@ -51,11 +52,15 @@ export const Basket:FC<PropsType> = (props) => {
     );
 };
 
-const StBasket = styled.div`
+const StBasket = styled.div<{$statusBasket:boolean}>`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+  transition: 0.5s ease-out;
+  ${props => !props.$statusBasket && css`
+    top: -50%;
+  `}
   background: gray;
 
 `

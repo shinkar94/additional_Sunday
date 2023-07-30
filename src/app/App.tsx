@@ -3,26 +3,15 @@ import '../App.css';
 import {Basket} from "../features/basket/Basket";
 import {Header} from "../features/Header/Header";
 import styled from "styled-components";
+import {Content} from "../features/Content/Content";
+import {InitialStateType} from "../common/InitialState";
 
-export type InitialStateType = {
-    id: number
-    title: string
-    description: string
-    price: number
-    discountPercentage: number
-    rating: number,
-    stock: number
-    brand: string,
-    category: string,
-    thumbnail: string,
-    images: string[]
-}
 function App() {
     const [marketState, setMarketState] = useState<InitialStateType[]>([])
     const [filterCategory, setFilterCategory] = useState('smartphones')
     const [category, setCategory] = useState<string[]>([])
     const [basket, setBasket] = useState<InitialStateType[]>([])
-
+    const [statusBasket, setStatusBasket] = useState(false)
     const toggleCategory = (newCategory: string)=>{
         setFilterCategory(newCategory)
     }
@@ -30,7 +19,8 @@ function App() {
         const getData = async () =>{
             const response = await fetch('https://dummyjson.com/products?limit=100')
             const data = await response.json()
-            setMarketState(data.products)
+            const resultProduct = data.products.map((el:InitialStateType) => ({...el, count: 1}))
+            setMarketState(resultProduct)
             const category = data.products.reduce((acc:string[], product:InitialStateType)=>{
                 if(!acc.includes(product.category)){
                     acc.push(product.category)
@@ -61,33 +51,24 @@ function App() {
                 alert("Error")
             }
         }
-        // setBasket(el)
     }
-    // console.log(marketState)
     const filteredState = marketState.filter(el => el.category === filterCategory)
   return (
     <StAppWrapper>
-        <Header basket={basket} marketState={marketState}/>
-        <div className={'content'}>
-            <div className={'sideBar'}>
-                {category.map((el, index) => <p key={index} onClick={()=>{toggleCategory(el)}}>{el}</p>)}
-            </div>
-            <div className={'rightContent'}>
-                {
-                    filteredState.map((el)=>{
-                        return(
-                            <div key={el.id} className={'product'} onClick={()=>{addBasket(el.id)}}>
-                                <h3>{el.title}</h3>
-                                <p>{el.brand}</p>
-                                <p>{el.price}</p>
-                            </div>
-                        )
-                    })
-                }
-            </div>
-        </div>
+        <Header basket={basket}
+                marketState={marketState}
+                setStatusBasket={setStatusBasket}
+        />
+        <Content category={category}
+                 toggleCategory={toggleCategory}
+                 filteredState={filteredState}
+                 addBasket={addBasket}/>
 
-        <Basket basket={basket} setBasket={setBasket}/>
+        <Basket basket={basket}
+                setBasket={setBasket}
+                statusBasket={statusBasket}
+                setStatusBasket={setStatusBasket}
+        />
     </StAppWrapper>
   );
 }
@@ -97,50 +78,4 @@ export default App;
 const StAppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-
-  .content {
-    background: antiquewhite;
-    padding: 10px;
-    display: flex;
-
-    .sideBar {
-      background: cornsilk;
-
-      & p {
-        background: gray;
-        margin: 2px;
-        cursor: pointer;
-        color: white;
-        font-size: 18px;
-        padding: 4px;
-        border-radius: 4px;
-
-        &:hover {
-          background: brown;
-        }
-      }
-    }
-
-    .rightContent {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      .product {
-        background: coral;
-        padding: 4px;
-        border-radius: 4px;
-
-        & p {
-          margin: 2px;
-        }
-
-        & h3 {
-          margin: 2px;
-          background: #444444;
-          color: white;
-        }
-      }
-    }
-  }
 `

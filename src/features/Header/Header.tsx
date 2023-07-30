@@ -1,17 +1,21 @@
 import React, {ChangeEvent, FC, useState} from 'react';
-import {InitialStateType} from "../../app/App";
 import styled from "styled-components";
 import basketImg from '../../assets/img/basket.svg'
+import {InitialStateType} from "../../common/InitialState";
 
 type HeaderType={
     basket: InitialStateType[]
     marketState: InitialStateType[]
+    setStatusBasket: (statusBasket: boolean)=>void
 }
 export const Header:FC<HeaderType> = (props) => {
-    const {basket, marketState} = props
+    const {basket, marketState, setStatusBasket} = props
     const [searchText, setSearchText] = useState('')
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) =>{
         setSearchText(event.currentTarget.value)
+    }
+    const openBasketHandler = () =>{
+        setStatusBasket(true)
     }
     const filteredProduct = searchText.length > 0 ? marketState.filter(el => el.title.toLowerCase().includes(searchText.toLowerCase())) : []
     return (
@@ -23,7 +27,7 @@ export const Header:FC<HeaderType> = (props) => {
                     {filteredProduct.map(el => <p key={el.id}>{el.title}</p>)}
                 </div>
             </div>
-            <button><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></button>
+            <button onClick={openBasketHandler}><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></button>
         </StHeader>
     );
 };
