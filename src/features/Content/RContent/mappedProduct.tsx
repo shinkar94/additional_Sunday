@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {InitialStateType} from "../../../common/InitialState";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 type PropsType = {
     filteredState: InitialStateType[]
     addBasket: (id:number) =>void
@@ -25,10 +25,10 @@ export const MappedProduct:FC<PropsType> = (props) => {
                             </StTopProduct>
                             <img src={el.thumbnail} alt={el.title}/>
                             <p>{el.description}</p>
-                            <StFooterProduct>
+                            <StFooterProduct $controledBasket={!controledBasket}>
                                 <button onClick={()=>{addBasket(el.id)}}
                                         disabled={controledBasket !== undefined}>
-                                    send basket
+                                    {controledBasket !== undefined ? 'added' : 'send basket'}
                                 </button>
                             </StFooterProduct>
                         </div>
@@ -48,11 +48,24 @@ const StTopProduct = styled.div`
   }
 `
 
-const StFooterProduct = styled.div`
+const StFooterProduct = styled.div<{$controledBasket: boolean}>`
   display: flex;
   justify-content: right;
-  & button{
+  & button {
     cursor: pointer;
-    
+    background: brown;
+    color: white;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid black;
+    &:hover {
+      background: #ff0000;
+    }
+    ${({$controledBasket}) => !$controledBasket && css`
+      background: rgba(165, 42, 42, 0.41);
+      &:hover {
+        background: rgba(165, 42, 42, 0.41);
+      }
+    `}
   }
 `

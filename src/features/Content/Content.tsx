@@ -18,7 +18,8 @@ export const Content:FC<ContentProps> = (props) => {
 };
 
 const StContent = styled.main`
-  background: #f3d7af;
-  padding: 10px;
   display: flex;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
 `

@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import styled from "styled-components";
 import basketImg from '../../assets/img/basket.svg'
+import loginImg from '../../assets/img/login.svg'
 import {InitialStateType} from "../../common/InitialState";
 import {NavLink} from "react-router-dom";
 
@@ -17,14 +18,23 @@ export const Header:FC<HeaderType> = (props) => {
     const filteredProduct = searchText.length > 0 ? marketState.filter(el => el.title.toLowerCase().includes(searchText.toLowerCase())) : []
     return (
         <StHeader>
-            <img src="#" alt="logo"/>
+            <h3>My Shop</h3>
             <div className={'searchPanel'}>
                 <input type="text" value={searchText} onChange={changeHandler} placeholder={'search'}/>
                 <div className={'searchBlock'}>
                     {filteredProduct.map(el => <p key={el.id}>{el.title}</p>)}
                 </div>
             </div>
-            <NavLink to={'/basket'}><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></NavLink>
+            <div className={'btn_hed_panel'}>
+                <div className={'group login_group'}>
+                    <NavLink to={'/basket'}><img src={loginImg} alt="loginImg"/></NavLink>
+                    Login
+                </div>
+                <div className={'group basket_group'}>
+                    <NavLink to={'/basket'}><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></NavLink>
+                    Basket
+                </div>
+            </div>
         </StHeader>
     );
 };
@@ -35,14 +45,17 @@ const StHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
-  background: burlywood;
+  background: #F7F8FA;
+  height: 60px;
+  box-shadow: 0 2px 4px 2px black;
+  z-index: 2;
   & a{
     position: relative;
     background: none;
     border: none;
     cursor: pointer;
     & img{
-      width: 40px;
+      width: 25px;
     }
     & span{
       position: absolute;
@@ -51,11 +64,12 @@ const StHeader = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       background: red;
       border-radius: 50%;
       color: white;
+      font-size: 12px;
     }
   }
   .searchPanel{
@@ -65,6 +79,9 @@ const StHeader = styled.div`
     & input{
       height: 30px;
       width: 100%;
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 2px 3px 2px black;
     }
     .searchBlock{
       position: absolute;
@@ -75,6 +92,19 @@ const StHeader = styled.div`
       overflow: auto;
       background: brown;
       color: white;
+      z-index: 2;
+    }
+  }
+  .btn_hed_panel{
+    display: flex;
+    cursor: pointer;
+    gap: 5px;
+    .group{
+      display: flex;
+      align-items: center;
+      border: 1px solid gray;
+      border-radius: 10px;
+      padding: 2px;
     }
   }
 `
