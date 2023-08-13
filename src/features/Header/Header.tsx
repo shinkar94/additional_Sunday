@@ -47,7 +47,7 @@ const StHeader = styled.div`
   padding: 0 10px;
   background: #F7F8FA;
   height: 60px;
-  box-shadow: 0 2px 4px 2px black;
+  box-shadow: 0 2px 4px 2px gray;
   z-index: 2;
   & a{
     position: relative;
@@ -81,7 +81,7 @@ const StHeader = styled.div`
       width: 100%;
       border-radius: 20px;
       border: none;
-      box-shadow: 0 2px 3px 2px black;
+      box-shadow: 0 2px 5px 1px gray;
     }
     .searchBlock{
       position: absolute;
@@ -101,9 +101,11 @@ const StHeader = styled.div`
     gap: 5px;
     .group{
       display: flex;
+      justify-content: center;
+      min-width: 100px;
       align-items: center;
       border: 1px solid gray;
-      border-radius: 10px;
+      border-radius: 20px;
       padding: 2px;
     }
   }

@@ -51,18 +51,23 @@ const StTopProduct = styled.div`
 const StFooterProduct = styled.div<{$controledBasket: boolean}>`
   display: flex;
   justify-content: right;
+
   & button {
+    width: 100px;
     cursor: pointer;
-    background: brown;
+    background: linear-gradient(45deg, #d93b3b, #917491);
     color: white;
     height: 30px;
     border-radius: 4px;
     border: 1px solid black;
+
     &:hover {
-      background: #ff0000;
+      background: #fc6161;
     }
+
     ${({$controledBasket}) => !$controledBasket && css`
-      background: rgba(165, 42, 42, 0.41);
+      background: rgba(145, 116, 145, 0.7);
+
       &:hover {
         background: rgba(165, 42, 42, 0.41);
       }
