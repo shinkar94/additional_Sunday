@@ -2,20 +2,17 @@ import React, {ChangeEvent, FC, useState} from 'react';
 import styled from "styled-components";
 import basketImg from '../../assets/img/basket.svg'
 import {InitialStateType} from "../../common/InitialState";
+import {NavLink} from "react-router-dom";
 
 type HeaderType={
     basket: InitialStateType[]
     marketState: InitialStateType[]
-    setStatusBasket: (statusBasket: boolean)=>void
 }
 export const Header:FC<HeaderType> = (props) => {
-    const {basket, marketState, setStatusBasket} = props
+    const {basket, marketState} = props
     const [searchText, setSearchText] = useState('')
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) =>{
         setSearchText(event.currentTarget.value)
-    }
-    const openBasketHandler = () =>{
-        setStatusBasket(true)
     }
     const filteredProduct = searchText.length > 0 ? marketState.filter(el => el.title.toLowerCase().includes(searchText.toLowerCase())) : []
     return (
@@ -27,7 +24,7 @@ export const Header:FC<HeaderType> = (props) => {
                     {filteredProduct.map(el => <p key={el.id}>{el.title}</p>)}
                 </div>
             </div>
-            <button onClick={openBasketHandler}><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></button>
+            <NavLink to={'/basket'}><img src={basketImg} alt="basketImg"/><span>{basket.length}</span></NavLink>
         </StHeader>
     );
 };
@@ -39,7 +36,7 @@ const StHeader = styled.div`
   align-items: center;
   padding: 0 10px;
   background: burlywood;
-  & button{
+  & a{
     position: relative;
     background: none;
     border: none;

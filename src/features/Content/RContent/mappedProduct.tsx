@@ -1,20 +1,36 @@
 import React, {FC} from 'react';
 import {InitialStateType} from "../../../common/InitialState";
+import styled from "styled-components";
 type PropsType = {
     filteredState: InitialStateType[]
     addBasket: (id:number) =>void
+    basket: InitialStateType[]
 }
 export const MappedProduct:FC<PropsType> = (props) => {
-    const {filteredState, addBasket} = props
+    const {filteredState, addBasket, basket} = props
     return (
         <>
             {
                 filteredState.map((el)=>{
+                    const controledBasket = basket.find(prod => prod.id === el.id)
                     return(
-                        <div key={el.id} className={'product'} onClick={()=>{addBasket(el.id)}}>
-                            <h3>{el.title}</h3>
-                            <p>{el.brand}</p>
-                            <p>{el.price}</p>
+                        <div key={el.id} className={'product'}>
+                            <StTopProduct>
+                                <p>{el.brand}</p>
+                                <h3>{el.title}</h3>
+                                <div className={'rating'}>
+                                    <p>{el.rating}</p>
+                                    <p>{el.price}</p>
+                                </div>
+                            </StTopProduct>
+                            <img src={el.thumbnail} alt={el.title}/>
+                            <p>{el.description}</p>
+                            <StFooterProduct>
+                                <button onClick={()=>{addBasket(el.id)}}
+                                        disabled={controledBasket !== undefined}>
+                                    send basket
+                                </button>
+                            </StFooterProduct>
                         </div>
                     )
                 })
@@ -22,3 +38,21 @@ export const MappedProduct:FC<PropsType> = (props) => {
         </>
     );
 };
+
+
+const StTopProduct = styled.div`
+  display: flex;
+  justify-content: space-between;
+  .rating{
+    display: flex;
+  }
+`
+
+const StFooterProduct = styled.div`
+  display: flex;
+  justify-content: right;
+  & button{
+    cursor: pointer;
+    
+  }
+`

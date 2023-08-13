@@ -1,38 +1,23 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {InitialStateType} from "../../../common/InitialState";
-import styled from "styled-components";
 import {MappedProduct} from "./mappedProduct";
+import {useParams} from "react-router-dom";
+import {S} from './rightContentStyle'
+
 type PropsType = {
-    filteredState: InitialStateType[]
+    marketState: InitialStateType[]
     addBasket: (id:number) =>void
+    basket: InitialStateType[]
 }
 export const RightContent:FC<PropsType> = (props) => {
-    const {addBasket,filteredState} = props
+    const {addBasket,marketState,basket} = props
+    const params = useParams()
+    const filteredState = marketState.filter(el => el.category === params.title)
     return (
-        <StRightContent>
-            <MappedProduct filteredState={filteredState} addBasket={addBasket}/>
-        </StRightContent>
+        <S.RightContent>
+            <MappedProduct filteredState={filteredState} basket={basket} addBasket={addBasket}/>
+        </S.RightContent>
     );
 };
 
-const StRightContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 
-    .product {
-      background: coral;
-      padding: 4px;
-      border-radius: 4px;
-
-      & p {
-        margin: 2px;
-      }
-
-      & h3 {
-        margin: 2px;
-        background: #444444;
-        color: white;
-      }
-    }
-`

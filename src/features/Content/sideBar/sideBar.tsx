@@ -1,22 +1,24 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
+import {NavLink} from "react-router-dom";
 
 type SideBarType = {
     category: string[]
-    toggleCategory: (newCategory: string)=>void
 }
 export const SideBar:FC<SideBarType> = (props) => {
-    const {toggleCategory, category} = props
+    const { category} = props
     return (
         <StSideBar>
-            {category.map((el, index) => <p key={index} onClick={()=>{toggleCategory(el)}}>{el}</p>)}
+            {category.map((el, index) => <NavLink key={index} to={`/product/${el}`}>{el}</NavLink>)}
         </StSideBar>
     );
 };
 
 const StSideBar = styled.div`
+    display: flex;
+    flex-direction: column;
     background: cornsilk;
-    & p {
+    & a {
       background: gray;
       margin: 2px;
       cursor: pointer;

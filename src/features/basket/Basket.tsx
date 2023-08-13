@@ -1,15 +1,14 @@
 import {FC, useEffect, useState} from 'react';
 import styled, {css} from "styled-components";
 import {InitialStateType} from "../../common/InitialState";
+import {useNavigate} from 'react-router-dom'
 
 type PropsType = {
     basket: InitialStateType[]
     setBasket: (basket: InitialStateType[])=>void
-    statusBasket: boolean
-    setStatusBasket: (statusBasket: boolean)=>void
 }
 export const Basket:FC<PropsType> = (props) => {
-    const {basket, setBasket, statusBasket, setStatusBasket} = props
+    const {basket, setBasket} = props
     const [resultBasket, setResultBasket] = useState<InitialStateType[]>([])
     useEffect(()=>{
         setResultBasket(basket)
@@ -27,11 +26,12 @@ export const Basket:FC<PropsType> = (props) => {
         setBasket(newBasket)
         localStorage.setItem('basket', JSON.stringify(newBasket))
     }
+    const navigate = useNavigate()
     const closeBasketHandler = () =>{
-       setStatusBasket(false)
+       navigate(-1)
     }
     return (
-        <StBasket $statusBasket={statusBasket}>
+        <StBasket >
             <button onClick={closeBasketHandler}>close</button>
             <h1>Basket</h1>
             {resultBasket.map(prod => {
@@ -52,15 +52,6 @@ export const Basket:FC<PropsType> = (props) => {
     );
 };
 
-const StBasket = styled.div<{$statusBasket:boolean}>`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  transition: 0.5s ease-out;
-  ${props => !props.$statusBasket && css`
-    top: -50%;
-  `}
+const StBasket = styled.div`
   background: gray;
-
 `

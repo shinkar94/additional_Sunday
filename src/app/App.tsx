@@ -1,20 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import '../App.css';
-import {Basket} from "../features/basket/Basket";
-import {Header} from "../features/Header/Header";
 import styled from "styled-components";
-import {Content} from "../features/Content/Content";
 import {InitialStateType} from "../common/InitialState";
+import {Router} from "../router";
 
 function App() {
     const [marketState, setMarketState] = useState<InitialStateType[]>([])
-    const [filterCategory, setFilterCategory] = useState('smartphones')
     const [category, setCategory] = useState<string[]>([])
     const [basket, setBasket] = useState<InitialStateType[]>([])
-    const [statusBasket, setStatusBasket] = useState(false)
-    const toggleCategory = (newCategory: string)=>{
-        setFilterCategory(newCategory)
-    }
     useEffect(()=>{
         const getData = async () =>{
             const response = await fetch('https://dummyjson.com/products?limit=100')
@@ -48,27 +41,13 @@ function App() {
                 setBasket(newBasket)
                 localStorage.setItem('basket', JSON.stringify(newBasket))
             }else{
-                alert("Error")
+                alert('error')
             }
         }
     }
-    const filteredState = marketState.filter(el => el.category === filterCategory)
   return (
     <StAppWrapper>
-        <Header basket={basket}
-                marketState={marketState}
-                setStatusBasket={setStatusBasket}
-        />
-        <Content category={category}
-                 toggleCategory={toggleCategory}
-                 filteredState={filteredState}
-                 addBasket={addBasket}/>
-
-        <Basket basket={basket}
-                setBasket={setBasket}
-                statusBasket={statusBasket}
-                setStatusBasket={setStatusBasket}
-        />
+        <Router basket={basket} marketState={marketState} setBasket={setBasket} addBasket={addBasket} category={category}/>
     </StAppWrapper>
   );
 }
